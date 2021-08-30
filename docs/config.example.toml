@@ -1,7 +1,7 @@
 # This is an example configuration file which showcases many, but not all,
 # of the available configuration options. For a full list of options, including
 # more information on each of them, please see:
-# https://github.com/pls-shareit/server/blob/master/docs/configuration.md
+# https://github.com/pls-shareit/api/blob/master/docs/configuration.md
 
 # Enable the given frontend.
 frontend_path = "/srv/shareit/frontend"

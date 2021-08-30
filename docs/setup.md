@@ -50,9 +50,9 @@ is not a pre-compiled executable for your operating system.
 ### Linux
 
  1. Download the executable
-    (or [click here](https://github.com/pls-shareit/server/releases/latest/download/shareitd-linux)):
+    (or [click here](https://github.com/pls-shareit/api/releases/latest/download/shareitd-linux)):
 
-    `wget https://github.com/pls-shareit/server/releases/latest/download/shareitd-linux -qO shareitd`
+    `wget https://github.com/pls-shareit/api/releases/latest/download/shareitd-linux -qO shareitd`
  2. Make the file executable:
 
     `chmod +x shareitd`
@@ -60,9 +60,9 @@ is not a pre-compiled executable for your operating system.
 ### MacOS
 
  1. Download the executable
-    (or [click here](https://github.com/pls-shareit/server/releases/latest/download/shareitd-macos)):
+    (or [click here](https://github.com/pls-shareit/api/releases/latest/download/shareitd-macos)):
 
-    `wget https://github.com/pls-shareit/server/releases/latest/download/shareitd-macos -qO shareitd`
+    `wget https://github.com/pls-shareit/api/releases/latest/download/shareitd-macos -qO shareitd`
  2. Make the file executable:
 
     `chmod +x shareitd`
@@ -70,9 +70,9 @@ is not a pre-compiled executable for your operating system.
 ### Windows
 
  1. Download the executable with Power shell
-    (or [click here](https://github.com/pls-shareit/server/releases/latest/download/shareitd.exe)):
+    (or [click here](https://github.com/pls-shareit/api/releases/latest/download/shareitd.exe)):
 
-    `iwr -outf clique-collector.exe https://github.com/pls-shareit/server/releases/latest/download/shareitd.exe`
+    `iwr -outf clique-collector.exe https://github.com/pls-shareit/api/releases/latest/download/shareitd.exe`
 
 ## 3b. Compile an executable
 

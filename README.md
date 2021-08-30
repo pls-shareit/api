@@ -1,4 +1,4 @@
-# Shareit
+# Shareit Server
 
 Shareit is a service for sharing files, short links and pastes. It is highly
 configurable and supports features including share expiration, password
