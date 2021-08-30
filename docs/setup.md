@@ -10,15 +10,12 @@ the service.
 
  1. [Install PostgreSQL.](https://www.postgresql.org/download/)
  2. Connect to the server as the `postgres` user (eg. `psql -U postgres`).
- 3. Create a new database:
-
-    `CREATE DATABASE shareit;`
- 4. Create a new user:
+ 3. Create a new user:
 
     `CREATE USER shareit WITH ENCRYPTED PASSWORD 'database-password-goes-here';`.
- 5. Grant the user access to the database:
+ 4. Create a database for the user:
 
-    `GRANT CONNECT, CREATE, INSERT, UPDATE ON DATABASE shareit TO shareit;`
+    `CREATE DATABASE shareit WITH OWNER shareit;`
 
 ## 2. Create the config file
 

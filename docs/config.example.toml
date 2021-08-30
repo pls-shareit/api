@@ -24,11 +24,11 @@ host = "postgres.example.com"
 port = 5000
 
 # Set the database username and password.
-username = "shareit-server"
-password = "verysecret"
+user = "shareit-server"
+pass = "verysecret"
 
 # And database name.
-database = "shareit-server"
+name = "shareit-server"
 
 [network]
 # Bind on all available interfaces.
@@ -38,7 +38,7 @@ address = "0.0.0.0"
 port = 80
 
 # This is a domain name pointing to this server.
-domain = "https://shareit.example.com"
+host = "https://shareit.example.com"
 
 [restrictions]
 # This is a password exclusive server, so we're happy with big files.
