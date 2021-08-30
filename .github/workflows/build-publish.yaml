@@ -1,0 +1,122 @@
+name: Build and Publish Binaries
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        name: [linux, windows, macos]
+
+        include:
+        - name: linux
+          os: ubuntu-latest
+          artifact_name: target/release/shareit
+          asset_name: shareit-linux
+        - name: windows
+          os: windows-latest
+          artifact_name: target/release/shareit.exe
+          asset_name: shareit-windows
+        - name: macos
+          os: macos-latest
+          artifact_name: target/release/shareit
+          asset_name: shareit-macos
+
+    steps:
+    - name: Checkout project
+      uses: actions/checkout@v1
+
+    - name: Install postgres (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libpq-dev
+
+    - name: Install postgres (MacOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install libpq
+
+    - name: Install postgres (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        choco install postgresql12 --force
+        echo "PQ_LIB_DIR=C:\Program Files\PostgreSQL\12\lib" >> $GITHUB_ENV
+
+    - name: Set up rust
+      uses: actions-rs/toolchain@v1
+      with:
+        override: true
+        toolchain: nightly
+
+    - name: Build
+      run: cargo build --release --locked
+
+    - name: Upload binaries as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ matrix.asset_name }}
+        path: ${{ matrix.artifact_name }}
+
+  publish:
+    name: Publish artifacts as release
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: ./artifacts
+
+    - name: Make POSIX artifacts executable
+      run: |
+        chmod +x ./artifacts/shareit-linux/shareit
+        chmod +x ./artifacts/shareit-macos/shareit
+      # Windows bases executability on the file extension, so we don't this for the exe file.
+
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+
+    - name: Upload Linux artifacts to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/shareit-linux/shareit
+        asset_name: shareitd-linux
+        asset_content_type: application/x-elf
+
+    - name: Upload MacOS artifacts to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/shareit-macos/shareit
+        asset_name: shareitd-macos
+        asset_content_type: application/x-mach-o
+
+    - name: Upload Windows artifacts to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/shareit-windows/shareit.exe
+        asset_name: shareitd.exe
+        asset_content_type: application/x-msdownload

@@ -1,0 +1,67 @@
+# This is an example configuration file which showcases many, but not all,
+# of the available configuration options. For a full list of options, including
+# more information on each of them, please see:
+# https://github.com/pls-shareit/server/blob/master/docs/configuration.md
+
+# Enable the given frontend.
+frontend_path = "/srv/shareit/frontend"
+
+# Store uploaded files here.
+upload_path = "/srv/shareit/shares"
+
+# Only check for expiry once a day.
+expiry_check_interval = "1 day"
+
+# Require one of these passwords to create a share.
+passwords = [
+    "supersecret",    # Alice's password.
+    "Welcome123",     # Bob's password.
+]
+
+[database]
+# Connect to an external database.
+host = "postgres.example.com"
+port = 5000
+
+# Set the database username and password.
+username = "shareit-server"
+password = "verysecret"
+
+# And database name.
+database = "shareit-server"
+
+[network]
+# Bind on all available interfaces.
+address = "0.0.0.0"
+
+# Listen on the conventional HTTP port.
+port = 80
+
+# This is a domain name pointing to this server.
+domain = "https://shareit.example.com"
+
+[restrictions]
+# This is a password exclusive server, so we're happy with big files.
+max_file_size = "1 GB"
+
+# And we have some *very* long URLs to be shortened.
+max_link_length = 2047
+
+# Because of the big files though, we want them to expire quickly.
+max_expiry_length = "1 week"
+
+# Override default of disallowing HTML files since we trust the users.
+disallowed_mime_types = []
+
+# Also, we want to allow shortlinks for mail addresses.
+allowed_mime_types = ["http", "https", "mailto"]
+
+[names]
+# Allow long share names, because why not.
+max_length = 255
+
+# Try to make random share names absolutely as short as possible.
+random_length = 1
+
+# And try very hard.
+random_attempt_limit = 25

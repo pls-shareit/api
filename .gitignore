@@ -1,0 +1,10 @@
+# Build & cache files.
+/target
+# Temporary files.
+*~
+# Editor configuration.
+/.vscode
+# Project configuration.
+shareit.toml
+# Diesel configuration.
+.env
