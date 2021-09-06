@@ -70,7 +70,7 @@ impl<'a> ShareBodyResponder<'a> {
         match self.mime_type.clone() {
             Some(mime_type) => {
                 if self.stream_response(response).is_ok() {
-                    response.raw_header("Mime-Type", mime_type);
+                    response.raw_header("Content-Type", mime_type);
                 }
             }
             None => self.error_response(response, "Mime type unexpectedly missing.".into()),

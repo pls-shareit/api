@@ -54,7 +54,7 @@ max_expiry_length = "1 week"
 disallowed_mime_types = []
 
 # Also, we want to allow shortlinks for mail addresses.
-allowed_mime_types = ["http", "https", "mailto"]
+allowed_link_schemes = ["http", "https", "mailto"]
 
 [names]
 # Allow long share names, because why not.

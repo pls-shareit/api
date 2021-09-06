@@ -107,7 +107,7 @@ impl HeaderParams {
                 } else {
                     Err(status::Custom(
                         Status::Forbidden,
-                        "Given Mime-Type is not allowed.".into(),
+                        "Given Content-Type is not allowed.".into(),
                     ))
                 }
             }
@@ -194,7 +194,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderParams {
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
         let headers = request.headers();
         let language = headers.get_one("Share-Highlighting").map(|s| s.to_string());
-        let mime_type = headers.get_one("Mime-Type").map(|s| s.to_string());
+        let mime_type = headers.get_one("Content-Type").map(|s| s.to_string());
         let token = headers.get_one("Authorization").map(|s| s.to_string());
         let kind = match Self::parse_kind(headers.get_one("Share-Type")) {
             Ok(kind) => kind,
