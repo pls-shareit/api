@@ -13,6 +13,8 @@ use std::sync::RwLock;
 use std::time::Duration;
 use std::{env, process};
 
+pub const DEFAULT_PASSWORD: &str = "password";
+
 fn default_highlighting_language() -> String { "auto".into() }
 fn default_mime_type() -> String { "application/octet-stream".into() }
 fn default_expiry_check_interval() -> Duration { Duration::from_secs(60) }
@@ -20,10 +22,8 @@ fn default_min_name_length() -> u8 { 1 }
 fn default_max_name_length() -> u8 { 32 }
 fn default_random_name_length() -> RwLock<usize> { RwLock::new(8) }
 fn default_random_name_attempt_limit() -> u8 { 3 }
-fn default_allow_custom_name() -> bool { true }
 fn default_max_upload_size() -> Byte { Byte::from_str("2 MB").unwrap() }
 fn default_max_link_length() -> u16 { 255 }
-fn default_allow_updates() -> bool { true }
 fn default_allowed_link_schemes() -> Vec<String> { vec!["http".into(), "https".into()] }
 fn default_disallowed_mime_types() -> Vec<String> { vec!["text/html".into()] }
 fn default_bind_address() -> String { "127.0.0.1".into() }
@@ -33,6 +33,17 @@ fn default_db_port() -> u16 { 5432 }
 fn default_db_user() -> String { "shareit".into() }
 fn default_db_name() -> String { "shareit".into() }
 fn default_upload_dir() -> PathBuf { "/var/shareit/shares/".into() }
+
+fn default_passwords() -> HashMap<String, Vec<Permission>> {
+    HashMap::from([(
+        DEFAULT_PASSWORD.into(),
+        vec![
+            Permission::CreateAny,
+            Permission::UpdateOwn,
+            Permission::CustomName,
+        ],
+    )])
+}
 
 fn default_highlighting_languages() -> Vec<String> {
     include_str!("res/languages.txt")
@@ -56,14 +67,26 @@ pub struct Config {
     pub default_mime_type: String,
     #[serde(with = "humantime_serde", default = "default_expiry_check_interval")]
     pub expiry_check_interval: Duration,
-    #[serde(default)]
-    pub passwords: Vec<String>,
+    #[serde(default = "default_passwords")]
+    pub passwords: HashMap<String, Vec<Permission>>,
     #[serde(default)]
     pub names: NamesConfig,
     #[serde(default)]
     pub restrictions: RestrictionsConfig,
     pub network: NetworkConfig,
     pub database: DatabaseConfig,
+}
+
+#[derive(Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum Permission {
+    CreateAny,
+    CreateLink,
+    CreateFile,
+    CreatePaste,
+    UpdateOwn,
+    UpdateAny,
+    CustomName,
 }
 
 #[derive(Deserialize)]
@@ -76,8 +99,6 @@ pub struct NamesConfig {
     random_length: RwLock<usize>,
     #[serde(default = "default_random_name_attempt_limit")]
     pub random_attempt_limit: u8,
-    #[serde(default = "default_allow_custom_name")]
-    pub allow_custom: bool,
 }
 
 impl NamesConfig {
@@ -106,7 +127,6 @@ impl Default for NamesConfig {
             max_length: default_max_name_length(),
             random_length: default_random_name_length(),
             random_attempt_limit: default_random_name_attempt_limit(),
-            allow_custom: default_allow_custom_name(),
         }
     }
 }
@@ -120,8 +140,6 @@ pub struct RestrictionsConfig {
     pub max_link_length: u16,
     #[serde(with = "humantime_serde", default)]
     pub max_expiry_time: Option<Duration>,
-    #[serde(default = "default_allow_updates")]
-    pub allow_updates: bool,
     #[serde(default)]
     pub allowed_mime_types: Vec<String>,
     #[serde(default = "default_disallowed_mime_types")]
@@ -136,7 +154,6 @@ impl Default for RestrictionsConfig {
             max_upload_size: default_max_upload_size(),
             max_link_length: default_max_link_length(),
             max_expiry_time: None,
-            allow_updates: default_allow_updates(),
             allowed_mime_types: vec![],
             disallowed_mime_types: vec![],
             allowed_link_schemes: default_allowed_link_schemes(),

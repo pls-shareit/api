@@ -1,4 +1,5 @@
 //! Tools for parsing HTTP headers.
+use crate::auth::Auth;
 use crate::config::Config;
 use crate::models::ShareKind;
 use rocket::http::Status;
@@ -8,7 +9,7 @@ use rocket::State;
 use std::time::{Duration, SystemTime};
 
 pub struct HeaderParams {
-    token: Option<String>,
+    raw_auth: Option<String>,
     kind: Option<ShareKind>,
     pub language: Option<String>,
     pub mime_type: Option<String>,
@@ -146,45 +147,11 @@ impl HeaderParams {
         }
     }
 
-    pub fn check_token(&self, actual: &str) -> Result<(), status::Custom<String>> {
-        match &self.token {
-            Some(given) => {
-                if actual == given {
-                    Ok(())
-                } else {
-                    Err(status::Custom(
-                        Status::Unauthorized,
-                        "Incorrect share token.".into(),
-                    ))
-                }
-            }
-            None => Err(status::Custom(
-                Status::Unauthorized,
-                "Authorization header is required.".into(),
-            )),
-        }
-    }
-
-    pub fn check_password(&self, conf: &State<Config>) -> Result<(), status::Custom<String>> {
-        if conf.passwords.is_empty() {
-            return Ok(());
-        }
-        match &self.token {
-            Some(password) => {
-                if conf.passwords.contains(password) {
-                    Ok(())
-                } else {
-                    Err(status::Custom(
-                        Status::Unauthorized,
-                        "Incorrect password.".into(),
-                    ))
-                }
-            }
-            None => Err(status::Custom(
-                Status::Unauthorized,
-                "Authorization header is required.".into(),
-            )),
-        }
+    pub fn get_auth<'a>(
+        &self,
+        conf: &'a State<Config>,
+    ) -> Result<Auth<'a>, status::Custom<String>> {
+        Auth::from_header(&self.raw_auth, conf)
     }
 }
 
@@ -195,7 +162,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderParams {
         let headers = request.headers();
         let language = headers.get_one("Share-Highlighting").map(|s| s.to_string());
         let mime_type = headers.get_one("Content-Type").map(|s| s.to_string());
-        let token = headers.get_one("Authorization").map(|s| s.to_string());
+        let raw_auth = headers.get_one("Authorization").map(|s| s.to_string());
         let kind = match Self::parse_kind(headers.get_one("Share-Type")) {
             Ok(kind) => kind,
             Err(e) => return Outcome::Failure(e),
@@ -206,11 +173,11 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderParams {
         };
         let content_length = Self::parse_content_length(headers.get_one("Content-Length"));
         Outcome::Success(HeaderParams {
+            raw_auth,
             kind,
             language,
             mime_type,
             expire_after,
-            token,
             content_length,
         })
     }

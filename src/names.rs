@@ -1,4 +1,5 @@
 //! Tools for generating and validating share names and tokens.
+use crate::auth::Auth;
 use crate::config::Config;
 use crate::schema::shares;
 use crate::DbConn;
@@ -121,13 +122,9 @@ fn validate_name(
     name: String,
     conf: &Config,
     conn: &DbConn,
+    auth: &Auth,
 ) -> Result<String, status::Custom<String>> {
-    if !conf.names.allow_custom {
-        return Err(status::Custom(
-            Status::Forbidden,
-            "Custom names are not allowed.".into(),
-        ));
-    }
+    auth.custom_name()?;
     ensure_name_urlsafe(&name)?;
     check_name_length(&name, conf)?;
     if name.ends_with('.') {
@@ -149,10 +146,11 @@ fn validate_name(
 pub fn get_name(
     conf: &Config,
     conn: &DbConn,
+    auth: &Auth,
     custom: Option<String>,
 ) -> Result<String, status::Custom<String>> {
     match custom {
-        Some(name) => validate_name(name, conf, conn),
+        Some(name) => validate_name(name, conf, conn, auth),
         None => NameGenerator::generate(conf, conn),
     }
 }

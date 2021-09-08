@@ -10,11 +10,11 @@ The following options are required:
 
 You are also encouraged to check the following options:
 
-- [`upload_dir`](#upload-dir)
+- [`upload_dir`](#upload_dir)
 - [`network.address`](#address)
 - [`network.port`](#port)
 - [`passwords`](#passwords)
-- [`frontend_path`](#frontend-path)
+- [`frontend_path`](#frontend_path)
 
 You can find an example configuration file showcasing many of the options
 [here](./config.example.toml).
@@ -80,11 +80,32 @@ variety of units, including `s[econds]`, `m[inutes]`, `h[ours]`, `d[ays]`,
 
 ### `passwords`
 
-An array of passwords for accessing the service. If set, one of the provided
-passwords must be used to create shares. The default is an empty array, which
-means no passwords are required.
+A table mapping passwords to arrays of permissions.
 
-Note that this only protects creating shares - anyone can access them.
+The available permissions are:
+
+- `create_link` - gives permission to create link shares.
+- `create_file` - gives permission to create file shares.
+- `create_paste` - gives permission to create paste shares.
+- `create_any` - shorthand for `create_link`, `create_file`, and `create_paste`.
+- `update_own` - allows people to update or delete their own shares.
+- `update_any` - allows people to update or delete any share.
+- `custom_name` - allows people to set a custom name for their shares.
+
+Use the password `default` to describe permissions for users who do not
+specify a password.
+
+The default looks like:
+
+```toml
+[passwords]
+default = ["create_any", "update_own", "custom_name"]
+```
+
+This allows anyone to create any share, using a custom name if they choose, and
+to update or delete their own shares.
+
+See [the example file](./config.example.toml) for a more complex example.
 
 ## Database options
 
@@ -137,8 +158,8 @@ This option is required, and must be a string.
 
 ## User restrictions
 
-These options configure limits on what users can do with the service. They go
-in a table named `restrictions`.
+These options configure global limits on what users can do with the service.
+They go in a table named `restrictions`.
 
 ### `max_upload_size`
 
@@ -158,11 +179,6 @@ default), or a string.
 If it is `null`, there is no limit, though a user can still specify a shorter
 expiry time for their own shares. If it is a string, the same units are allowed
 as for [`expiry_check_interval`](#expiry_check_interval).
-
-### `allow_updates`
-
-Whether or not users can update and delete their own shares. This defaults to
-`true`. To disable it, set this to `false`.
 
 ### `allowed_mime_types` and `disallowed_mime_types`
 
@@ -186,11 +202,6 @@ set it to the empty array (`[]`).
 ## Share naming options
 
 These options configure how shares are named. They go in a table named `names`.
-
-### `allow_custom`
-
-Whether or not users can specify their own names for their shares. This
-defaults to `true`. To disable it, set this to `false`.
 
 ### `min_length` and `max_length`
 

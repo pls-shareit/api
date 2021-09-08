@@ -93,17 +93,20 @@ impl<'a> Responder<'a> for ShareBodyResponder<'a> {
 pub struct ShareCreationResponder<'a> {
     pub conf: State<'a, Config>,
     pub name: String,
-    pub token: String,
+    pub token: Option<String>,
 }
 
 impl<'a> Responder<'a> for ShareCreationResponder<'a> {
     fn respond_to(self, _: &Request) -> Result<Response<'a>, Status> {
         let url = format!("{}{}", self.conf.network.host, self.name);
-        Response::build()
+        let mut response = Response::build();
+        response
             .status(Status::Created)
-            .raw_header("Share-Token", self.token)
             .header(ContentType::Plain)
-            .sized_body(io::Cursor::new(url))
-            .ok()
+            .sized_body(io::Cursor::new(url));
+        if let Some(token) = self.token {
+            response.raw_header("Share-Token", token);
+        };
+        response.ok()
     }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "shareit"
-version = "0.1.1"
+version = "0.2.0-alpha.0"
 edition = "2018"
 authors = ["Artemis <me@arty.li>"]
 description = "A link shortener, file uploader and paste bin."
@@ -11,7 +11,7 @@ repository = "https://github.com/pls-shareit/shareit"
 [dependencies]
 diesel = { version = "1.4.7", features = ["postgres", "chrono"] }
 diesel_migrations = "1.4.0"
-rocket = "0.4.10"
+rocket = { version = "0.4.10", default-features = false }
 toml = "0.5.8"
 serde = { version = "1.0", features = ["derive"] }
 humantime-serde = "1.0.1"
@@ -22,7 +22,7 @@ url = { version = "2.2.2", features = ["serde"] }
 [dependencies.rocket_contrib]
 version = "0.4.10"
 default-features = false
-features = ["diesel_postgres_pool", "serve"]
+features = ["diesel_postgres_pool", "serve", "json"]
 
 [dependencies.byte-unit]
 version = "4.0.12"

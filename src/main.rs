@@ -9,7 +9,9 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
+mod abilities;
 mod api;
+mod auth;
 mod body;
 mod config;
 mod errors;
@@ -53,6 +55,7 @@ fn main() {
                 api::get,
                 api::update,
                 api::delete,
+                api::abilities,
                 api::not_found,
                 api::fallback_index,
             ],

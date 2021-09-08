@@ -12,11 +12,18 @@ upload_path = "/srv/shareit/shares"
 # Only check for expiry once a day.
 expiry_check_interval = "1 day"
 
-# Require one of these passwords to create a share.
-passwords = [
-    "supersecret",    # Alice's password.
-    "Welcome123",     # Bob's password.
-]
+[passwords]
+# Don't allow people without a password to do anything except look at shares.
+default = []
+
+# Allow Alice to do absolutely *everything* - create, update or delete any share.
+supersecretpassword = ["create_any", "update_any", "custom_name"]
+
+# Allow Bob to do anything except update or delete other people's shares.
+"pa$$word-of-B0B" = ["create_any", "update_own", "custom_name"]
+
+# Only allow Charlie to create links with random names.
+chaaaaarl13 = ["create_link"]
 
 [database]
 # Connect to an external database.

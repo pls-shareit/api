@@ -68,7 +68,7 @@ where
 pub struct Share {
     pub name: String,
     pub expiry: Option<SystemTime>,
-    pub token: String,
+    pub token: Option<String>,
     pub kind: ShareKind,
     pub link: Option<String>,
     pub language: Option<String>,
@@ -86,7 +86,12 @@ impl Identifiable for Share {
 }
 
 impl Share {
-    pub fn new(name: String, expiry: Option<SystemTime>, token: String, kind: ShareKind) -> Self {
+    pub fn new(
+        name: String,
+        expiry: Option<SystemTime>,
+        token: Option<String>,
+        kind: ShareKind,
+    ) -> Self {
         Share {
             name,
             expiry,
