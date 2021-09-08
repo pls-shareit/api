@@ -89,7 +89,7 @@ The available permissions are:
 - `create_paste` - gives permission to create paste shares.
 - `create_any` - shorthand for `create_link`, `create_file`, and `create_paste`.
 - `update_own` - allows people to update or delete their own shares.
-- `update_any` - allows people to update or delete any share.
+- `update_any` - allows people to update or delete any share (implies `update_own`).
 - `custom_name` - allows people to set a custom name for their shares.
 
 Use the password `default` to describe permissions for users who do not

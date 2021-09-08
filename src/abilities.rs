@@ -45,8 +45,8 @@ impl Abilities {
         let create_file = create_any || permissions.contains(&Permission::CreateFile);
         let create_link = create_any || permissions.contains(&Permission::CreateLink);
         let create_paste = create_any || permissions.contains(&Permission::CreatePaste);
-        let update_own = permissions.contains(&Permission::UpdateOwn);
         let update_any = permissions.contains(&Permission::UpdateAny);
+        let update_own = update_any || permissions.contains(&Permission::UpdateOwn);
         let custom_names = if permissions.contains(&Permission::CustomName) {
             Some(NameFeatures {
                 min_length: config.names.min_length,

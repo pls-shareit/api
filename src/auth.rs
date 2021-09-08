@@ -44,7 +44,8 @@ impl<'a> Auth<'a> {
                 let (method, content) = header.split_once(' ').ok_or_else(|| {
                     status::Custom(
                         Status::BadRequest,
-                        "Authorization header must contain a space separated method and content.".into(),
+                        "Authorization header must contain a space separated method and content."
+                            .into(),
                     )
                 })?;
                 Auth::from_header_parts(conf, method, content)
@@ -119,7 +120,7 @@ impl<'a> Auth<'a> {
             Auth::Password(permissions) => permissions,
             Auth::Default(permissions) => permissions,
         };
-        permissions.contains(&Permission::UpdateOwn)
+        permissions.contains(&Permission::UpdateOwn) || permissions.contains(&Permission::UpdateAny)
     }
 
     pub fn update_share(&self, share: &Share) -> Result<(), status::Custom<String>> {
