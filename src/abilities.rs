@@ -27,6 +27,8 @@ pub struct Abilities {
     pub update_any: bool,
     /// Restrictions on custom names, or None if you cannot use custom names.
     pub custom_names: Option<NameFeatures>,
+    /// The maximum value allowed for the Expires-After header, if restricted.
+    pub max_expiry_time: Option<u64>,
     /// The MIME types allowed for file uploads.
     pub mime_types_whitelist: Vec<String>,
     /// MIME types disallowed for file uploads. Ignored if the whitelist is not empty.
@@ -55,6 +57,7 @@ impl Abilities {
         } else {
             None
         };
+        let max_expiry_time = config.restrictions.max_expiry_time.map(|x| x.as_secs());
         let mime_types_whitelist = config.restrictions.allowed_mime_types.clone();
         let mime_types_blacklist = config.restrictions.disallowed_mime_types.clone();
         let link_schemes = config.restrictions.allowed_link_schemes.clone();
@@ -67,6 +70,7 @@ impl Abilities {
             update_own,
             update_any,
             custom_names,
+            max_expiry_time,
             mime_types_whitelist,
             mime_types_blacklist,
             link_schemes,

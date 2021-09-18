@@ -55,7 +55,7 @@ max_file_size = "1 GB"
 max_link_length = 2047
 
 # Because of the big files though, we want them to expire quickly.
-max_expiry_length = "1 week"
+max_expiry_time = "1 week"
 
 # Override default of disallowing HTML files since we trust the users.
 disallowed_mime_types = []

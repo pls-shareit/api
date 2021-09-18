@@ -70,6 +70,10 @@ It will also contain:
 - A `highlighting_languages` field, corresponding directly to
   [the `highlighting_languages` config option](configuration.md#highlighting_languages).
 
+- A `max_expiry_time` field, corresponding to the
+  [`max_expiry_time` config option](configuration.md#max_expiry_time), given
+  as an integer in seconds.
+
 This endpoint will return a 401 error if an unknown password is used.
 
 ### `POST /`
