@@ -110,11 +110,6 @@ temporary redirect to the link. For a file share, this will return the file
 contents, with the `Content-Type` set appropriately. For a paste share, this
 will return the paste contents, with the `Share-Highlighting` header set.
 
-If a frontend is configured, adding `?v` to the end of the URL will return the
-`share.html` file of the frontend instead. It is up to the frontend to retrieve
-the contents of the share. If a frontend is not configured, adding `?v` will
-not change the response.
-
 ### `DELETE /<name>`
 
 Delete a share you created. This endpoint returns a `204` response if
@@ -141,4 +136,5 @@ A password or share token should be set as described in
 ### `GET /`
 
 Returns the `index.html` file of the frontend if enabled, or a `404` error
-otherwise.
+otherwise. Arbitrary query parameters may be passed, which will be ignored
+(but may be useful for the frontend).

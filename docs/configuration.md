@@ -26,15 +26,18 @@ These options go at the top level of the TOML file, not within any table:
 ### `frontend_path`
 
 The path to a web frontend to use. This should point to a folder which contains
-an `index.html` file, a `share.html` file, and optionally a `static` folder.
+an `index.html` file and optionally a `static` folder.
 
-The `index.html` file will be served at the root of the service. The
-`share.html` will be served at the share endpoints, when `?v` is appended to
-the URL.
+The `index.html` file will be served at the root of the service. Files within
+the `static` folder, if present, will be served under `/static`.
 
-This may either be a string or `null` (the default). If it is `null`, then no
-frontend will be served. Otherwise, it must be a path which the service can
-read.
+For example, if `frontend_path` was set to `/srv/shareit/frontend`, a file at
+`/srv/shareit/frontend/static/img/logo.png` would be served at
+`/static/img/logo.png`.
+
+This setting may either be a string or `null` (the default). If it is `null`,
+then no frontend will be served. Otherwise, it must be a path which the service
+can read.
 
 ### `upload_dir`
 

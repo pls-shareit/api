@@ -8,4 +8,4 @@ For more information and docs, see one of these files:
 
 - [Installation and Setup](./docs/setup.md)
 - [Configuration Options](./docs/configuration.md)
-- [The exposed API](./docs/api.md)
+- [The Exposed API](./docs/api.md)
