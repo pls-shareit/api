@@ -1,6 +1,6 @@
 [package]
 name = "shareit"
-version = "0.3.1"
+version = "0.4.0"
 edition = "2018"
 authors = ["Artemis <me@arty.li>"]
 description = "A link shortener, file uploader and paste bin."

@@ -156,9 +156,10 @@ impl Share {
         }
     }
 
-    pub fn body_response(self, conf: State<Config>) -> ShareBodyResponder {
+    pub fn body_response(self, conf: State<Config>, accept_redirect: bool) -> ShareBodyResponder {
         ShareBodyResponder {
             conf,
+            accept_redirect,
             name: self.name,
             kind: self.kind,
             link: self.link,

@@ -72,8 +72,9 @@ pub fn get(
     conn: DbConn,
     conf: State<Config>,
     name: String,
+    headers: HeaderParams,
 ) -> Result<ShareBodyResponder, status::Custom<String>> {
-    Ok(Share::get(name, &conn, &conf.upload_dir)?.body_response(conf))
+    Ok(Share::get(name, &conn, &conf.upload_dir)?.body_response(conf, headers.accept_redirect))
 }
 
 /// Delete a share.
@@ -130,7 +131,7 @@ pub fn update(
         .set(&share)
         .execute(&conn.0)
         .map_err(|_| status::Custom(Status::InternalServerError, "Database error.".into()))?;
-    Ok(share.body_response(conf))
+    Ok(share.body_response(conf, headers.accept_redirect))
 }
 
 /// Get information on the features this server supports.

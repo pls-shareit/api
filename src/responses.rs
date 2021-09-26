@@ -9,6 +9,7 @@ use std::io;
 
 pub struct ShareBodyResponder<'a> {
     pub conf: State<'a, Config>,
+    pub accept_redirect: bool,
     pub name: String,
     pub kind: ShareKind,
     pub link: Option<String>,
@@ -27,9 +28,15 @@ impl<'a> ShareBodyResponder<'a> {
     fn link_response(self, response: &mut ResponseBuilder) {
         match self.link {
             Some(link) => {
+                let status = if self.accept_redirect {
+                    Status::TemporaryRedirect
+                } else {
+                    Status::Ok
+                };
                 response
-                    .status(Status::TemporaryRedirect)
-                    .raw_header("Location", link);
+                    .status(status)
+                    .raw_header("Location", link.clone())
+                    .sized_body(io::Cursor::new(link));
             }
             None => self.error_response(response, "Share link unexpectedly missing.".into()),
         };

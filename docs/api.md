@@ -113,6 +113,14 @@ will return the paste contents, with the `Share-Highlighting` header set.
 The `Share-Type` header will also be set on the response, to one of `link`,
 `file`, or `paste`.
 
+If the `Accept-Redirect` header on the request is set to `no`, the server will
+give exactly the same response, but use the `200` status code instead of `307`.
+For non-link shares, it will always use `200` for successful requests.
+
+This is to allow web frontends to resolve link shares, since browsers do not
+allow scripts to get the resolved URL of an HTTP redirect (see
+[the spec](https://fetch.spec.whatwg.org/#atomic-http-redirect-handling)).
+
 ### `DELETE /<name>`
 
 Delete a share you created. This endpoint returns a `204` response if
@@ -135,6 +143,9 @@ For file and paste shares respectively, the `Content-Type` and
 
 A password or share token should be set as described in
 [**Authentication**](#authentication).
+
+This endpoint will give the same response as the `GET /<name>` endpoint,
+including handling the `Accept-Redirect` header.
 
 ### `GET /`
 

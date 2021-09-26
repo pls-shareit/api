@@ -15,6 +15,7 @@ pub struct HeaderParams {
     pub mime_type: Option<String>,
     expire_after: Option<Duration>,
     pub content_length: Option<u64>,
+    pub accept_redirect: bool,
 }
 
 impl HeaderParams {
@@ -163,6 +164,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderParams {
         let language = headers.get_one("Share-Highlighting").map(|s| s.to_string());
         let mime_type = headers.get_one("Content-Type").map(|s| s.to_string());
         let raw_auth = headers.get_one("Authorization").map(|s| s.to_string());
+        let accept_redirect = !matches!(headers.get_one("Accept-Redirect"), Some("no"));
         let kind = match Self::parse_kind(headers.get_one("Share-Type")) {
             Ok(kind) => kind,
             Err(e) => return Outcome::Failure(e),
@@ -179,6 +181,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for HeaderParams {
             mime_type,
             expire_after,
             content_length,
+            accept_redirect,
         })
     }
 }

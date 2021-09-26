@@ -13,7 +13,7 @@ use std::sync::RwLock;
 use std::time::Duration;
 use std::{env, process};
 
-pub const DEFAULT_PASSWORD: &str = "password";
+pub const DEFAULT_PASSWORD: &str = "default";
 
 fn default_highlighting_language() -> String { "auto".into() }
 fn default_mime_type() -> String { "application/octet-stream".into() }
