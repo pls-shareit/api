@@ -81,11 +81,12 @@ impl<'a> ShareBodyResponder<'a> {
 impl<'a> Responder<'a> for ShareBodyResponder<'a> {
     fn respond_to(self, _: &Request) -> Result<Response<'a>, Status> {
         let mut response = Response::build();
-        match self.kind {
-            ShareKind::Link => self.link_response(&mut response),
-            ShareKind::Paste => self.paste_response(&mut response),
-            ShareKind::File => self.file_response(&mut response),
+        let (kind_name, _) = match self.kind {
+            ShareKind::Link => ("link", self.link_response(&mut response)),
+            ShareKind::Paste => ("paste", self.paste_response(&mut response)),
+            ShareKind::File => ("file", self.file_response(&mut response)),
         };
+        response.raw_header("Share-Type", kind_name);
         response.ok()
     }
 }

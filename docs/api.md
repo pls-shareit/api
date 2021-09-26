@@ -110,6 +110,9 @@ temporary redirect to the link. For a file share, this will return the file
 contents, with the `Content-Type` set appropriately. For a paste share, this
 will return the paste contents, with the `Share-Highlighting` header set.
 
+The `Share-Type` header will also be set on the response, to one of `link`,
+`file`, or `paste`.
+
 ### `DELETE /<name>`
 
 Delete a share you created. This endpoint returns a `204` response if
