@@ -7,7 +7,7 @@
 frontend_path = "/srv/shareit/frontend"
 
 # Store uploaded files here.
-upload_path = "/srv/shareit/shares"
+upload_dir = "/srv/shareit/shares"
 
 # Only check for expiry once a day.
 expiry_check_interval = "1 day"
