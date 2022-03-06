@@ -72,7 +72,7 @@ is not a pre-compiled executable for your operating system.
  1. Download the executable with Power shell
     (or [click here](https://github.com/pls-shareit/api/releases/latest/download/shareitd.exe)):
 
-    `iwr -outf clique-collector.exe https://github.com/pls-shareit/api/releases/latest/download/shareitd.exe`
+    `iwr -outf shareitd.exe https://github.com/pls-shareit/api/releases/latest/download/shareitd.exe`
 
 ## 3b. Compile an executable
 
